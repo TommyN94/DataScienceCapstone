@@ -1,0 +1,83 @@
+---
+title: "Data Science Capstone"
+subtitle: "Quiz 1: Getting Started"
+author: "Thomas Neitmann"
+output:
+  prettydoc::html_pretty:
+    keep_md: yes
+    theme: architect
+---
+
+## Preparation
+
+```{r setup, echo=FALSE}
+knitr::opts_chunk$set(cache = TRUE)
+```
+
+```{r prep}
+files = list.files("final/en_US", full.names = TRUE)
+text = lapply(files, readr::read_lines, progress = FALSE)
+files
+```
+
+## Question 1
+
+The `en_US.blogs.txt` file is how many megabytes?
+
+```{r q1}
+fileSize = file.info(files[1L])$size
+format(fileSize, big.mark = ",", scientific = F)
+```
+
+
+## Question 2
+
+The `en_US.twitter.txt` has how many lines of text?
+
+```{r q2}
+nLines = length(text[[3L]])
+format(nLines, big.mark = ",")
+```
+
+
+## Question 3
+
+What is the length of the longest line seen in any of the three en_US data sets?
+
+```{r q3}
+numChar = lapply(text, function(t) max(nchar(t)))
+names(numChar) = files
+numChar
+```
+
+
+## Question 4
+
+In the en_US twitter data set, if you divide the number of lines where the word "love" (all lowercase) occurs by the number of lines the word "hate" (all lowercase) occurs, about what do you get?
+
+```{r q4}
+loveFreq = sum(grepl("love", text[[3L]]))
+hateFreq = sum(grepl("hate", text[[3L]]))
+ratio = loveFreq / hateFreq
+format(ratio, digits = 0)
+```
+
+
+## Question 5
+
+The one tweet in the en_US twitter data set that matches the word "biostats" says what?
+
+```{r q5}
+biostatsIndex = which(grepl("biostats", text[[3L]]))
+text[[3L]][biostatsIndex]
+```
+
+
+## Question 6
+
+How many tweets have the exact characters "A computer once beat me at chess, but it was no match for me at kickboxing". (I.e. the line matches those characters exactly.)
+
+```{r q6}
+string = "^A computer once beat me at chess, but it was no match for me at kickboxing$"
+sum(grepl(string, text[[3L]]))
+```
